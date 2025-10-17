@@ -7,36 +7,40 @@ public class Main {
         String response;
 
         while (true) {
-            System.out.print("Deseja ver os livros disponíveis? (SIM/NAO): ");
-            response = scanner.nextLine().trim().toUpperCase();
+            System.out.println("=== Menu ===");
+            System.out.println("1. Ver livros disponíveis");
+            System.out.println("2. Pegar um livro emprestado");
+            System.out.println("3. Cadastrar um novo livro");
+            System.out.println("4. Cadastrar um novo cliente");
+            System.out.println("5. Sair");
+            System.out.print("Escolha uma opção: ");
+            int option = scanner.nextInt();
+            scanner.nextLine(); // Consumir nova linha
 
-            if (response.equals("SIM")) {
-                bookstore.listAvailableBooks();
-
-                if (bookstore.getBooks().stream().anyMatch(Book::getAvailable)) {
-                    // Pergunta ao usuário se deseja emprestar um livro
-                    System.out.print("Deseja pegar um livro emprestado? (SIM/NAO): ");
-                    String loanResponse = scanner.nextLine().trim().toUpperCase();
-
-                    if (loanResponse.equals("SIM")) {
-                        bookstore.chooseBookForLoan();
-                    } else if (loanResponse.equals("NAO")) {
-                        System.out.println("Você optou por não pegar um livro emprestado.");
+            switch (option) {
+                case 1:
+                    bookstore.listAvailableBooks();
+                    break;
+                case 2:
+                    if (bookstore.getBooks().stream().anyMatch(Book::getAvailable)) {
+                        bookstore.chooseBookForLoan(); // Metodo de escolher livro para empréstimo
                     } else {
-                        System.out.println("Resposta inválida. Por favor, digite 'SIM' ou 'NÃO'.");
+                        System.out.println("Desculpe, não há livros disponíveis para empréstimo.");
                     }
-                } else {
-                    System.out.println("Desculpe, todos os livros foram emprestados! :(");
-                }
-
-            } else if (response.equals("NAO")) {
-                System.out.println("Obrigado por usar o sistema. Encerrando...");
-                break;
-            } else {
-                System.out.println("Por favor, digite 'SIM' ou 'NÃO'.");
+                    break;
+                case 3:
+                    bookstore.registerNewBook();
+                    break;
+                case 4:
+                    bookstore.registerNewClient();
+                    break;
+                case 5:
+                    System.out.println("Obrigado por usar o sistema. Encerrando...");
+                    scanner.close();
+                    return; // Encerra o programa
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
             }
         }
-
-        scanner.close();
     }
 }

@@ -7,6 +7,10 @@ public class Bookstore {
     private List<Book> books = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
     private List<Loan> loans = new ArrayList<>();
+    private final List<Client> clients = new ArrayList<>();
+    private int nextBookId = 1;
+    private int nextAuthorId = 1;
+    private int nextClientId = 1;
 
     // Construtor
     public Bookstore() {
@@ -46,6 +50,42 @@ public class Bookstore {
         }
     }
 
+    // Metodo para registrar um novo livro
+    public void registerNewBook() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Digite o título do livro: ");
+        String title = scanner.nextLine();
+        System.out.print("Digite o nome do autor: ");
+        String authorName = scanner.nextLine();
+        System.out.print("Digite se o livro está disponível (true/false): ");
+        boolean available = scanner.nextBoolean();
+
+        Author author = new Author(nextAuthorId++, authorName, LocalDate.now()); // Gera ID automaticamente
+        Book book = new Book(nextBookId++, title, author, available, LocalDate.now(), LocalDate.now()); // Gera ID automaticamente
+        books.add(book);
+        System.out.println("Livro adicionado com sucesso!");
+    }
+
+    // Metodo para cadastrar um novo cliente
+    public void registerNewClient() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Digite o nome do cliente: ");
+        String name = scanner.nextLine();
+        System.out.print("Digite o email do cliente: ");
+        String email = scanner.nextLine();
+
+        for (Client client : clients) {
+            if (client.email().equalsIgnoreCase(email)) {
+                System.out.println("Este email já está cadastrado.");
+                return;
+            }
+        }
+
+        Client client = new Client(nextClientId++, name, email);
+        clients.add(client);
+        System.out.println("Cliente cadastrado com sucesso!");
+    }
+
     // Mtodo para escolher livro pelo ID
     public void chooseBookForLoan() {
         Scanner scanner = new Scanner(System.in);
@@ -73,6 +113,16 @@ public class Bookstore {
         } else {
             System.out.println("Livro não encontrado ou não disponível para empréstimo.");
         }
+    }
+
+    public List<Book> searchBooksByTitle(String title) {
+        List<Book> foundBooks = new ArrayList<>();
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(title)) {
+                foundBooks.add(book);
+            }
+        }
+        return foundBooks;
     }
 
     // Getters and Setters
